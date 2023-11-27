@@ -12,7 +12,7 @@ def crearBaseDatos():
 
         cur.execute("""CREATE TABLE IF NOT EXISTS Usuario(
                       id INTEGER PRIMARY KEY AUTOINCREMENT,
-                      nick TEXT,
+                      nick TEXT UNIQUE,
                       password TEXT,
                       avatar BLOB,
                       partidas_jugadas INTEGER,
