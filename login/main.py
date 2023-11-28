@@ -1,6 +1,6 @@
 import tkinter
 from persistencia import crearBaseDatos
-from funciones import registraUsuario,login,primerFrame,segundoFrame
+from funciones import registraUsuario,login,primerFrame,segundoFrame,partidaEmpezada
 
 
 
@@ -25,10 +25,10 @@ segundoFrame(ventana)
 
 #---------------------------------------------------------------------------------------
 
-botonCrear = tkinter.Button(ventana,text="Crear Usuario",command=registraUsuario)
+botonCrear = tkinter.Button(ventana,text="Crear Usuario",command=registraUsuario, width=20)
 botonCrear.pack(side=tkinter.BOTTOM, pady=10)
-botonStart = tkinter.Button(ventana,text="Empezar partida",state=tkinter.DISABLED)
-botonStart.pack(side=tkinter.BOTTOM)
+ventana.botonStart = tkinter.Button(ventana,text="Empezar partida",state=tkinter.DISABLED,command=partidaEmpezada, width=20)
+ventana.botonStart.pack(side=tkinter.BOTTOM)
 
 
 
