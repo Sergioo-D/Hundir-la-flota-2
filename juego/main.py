@@ -51,6 +51,9 @@ def crear_interfaz():
     global contador_movimientos
     contador_movimientos = tk.Label(window, text="Moviments: 0")
     contador_movimientos.grid(row=11, column=4)
+    global l_jugador
+    l_jugador = tk.Label(window, text="Turno jugador 1: 0")
+    l_jugador.grid(row=10, column=5, columnspan=2)
 
 
 def iniciar_barcos():
@@ -65,7 +68,7 @@ def iniciar_barcos():
                     for i in range(barco):
                         tablero[fila][columna + i] = 1
                         posicion = [fila, columna + i]
-                        #casillas_tablero[fila][columna + i].config(bg="red")
+                        casillas_tablero[fila][columna + i].config(bg="red")
                         barcos_posiciones[barco].append(posicion)
                     cabe = True
             else:  # orientacion == 'vertical'
@@ -75,7 +78,7 @@ def iniciar_barcos():
                     for i in range(barco):
                         tablero[fila + i][columna] = 1
                         posicion = [fila + i, columna]
-                        #casillas_tablero[fila + i][columna].config(bg="red")
+                        casillas_tablero[fila + i][columna].config(bg="red")
                         barcos_posiciones[barco].append(posicion)
                     cabe = True
 
@@ -95,12 +98,13 @@ def dispara():
                 if 1 <= int(num) <= columns:
                     fila = valores[letra]
                     columna = int(num) - 1
+                    movimientos += 1
+                    contador_movimientos.config(text=f"Moviments: {movimientos}")
+                    l_jugador.config(text=f"Turno jugador 1: {movimientos}")
                     if tablero[fila][columna] == 1:  # Si hay un barco en la casilla impactada
                         if casillas_tablero[fila][columna] not in acierto:
                             casillas_tablero[fila][columna].config(bg="orange")
                             acierto.append(casillas_tablero[fila][columna])
-                            movimientos += 1
-                            contador_movimientos.config(text=f"Moviments: {movimientos}")
                             # Buscar el tamaño del barco impactado y actualizar el contador de partes impactadas
                             for size in barcos:
                                 if [fila, columna] in barcos_posiciones[size]:
@@ -110,6 +114,10 @@ def dispara():
                                         for pos in barcos_posiciones[size]:
                                             casillas_tablero[pos[0]][pos[1]].config(bg="black")
                             win()
+                        else:
+                            movimientos -= 1
+                            contador_movimientos.config(text=f"Moviments: {movimientos}")
+                            l_jugador.config(text=f"Turno jugador 1: {movimientos}")
                     else:
                         casillas_tablero[fila][columna].config(bg="blue")
                 else:
