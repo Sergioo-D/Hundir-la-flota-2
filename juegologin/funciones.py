@@ -11,7 +11,7 @@ from persistencia import conectarBBDD,obtenerUsuario
 fallos = 0
 usuariosLogeados= 0
 idUserLogeado = id
-global label_nickk, label_aavatar,label_imagenAvatar,ventana,window
+global label_nickk, label_aavatar,label_imagenAvatar,ventana
 
 
 
@@ -32,10 +32,11 @@ def primerFrame(ventana):
 
     botonEntrar = tkinter.Button(frameJ1, text="Entrar", command=lambda: login(entry_nickJ1.get(), entry_passwordJ1.get(),ventana,frameJ1))
     botonEntrar.pack(side=tkinter.BOTTOM, pady=10)
+
     
 
 def segundoFrame(ventana):
-    frameJ2 = tkinter.Frame(ventana, bg="red")
+    frameJ2 = tkinter.Frame(ventana, bg="blue")
     frameJ2.pack(side=tkinter.TOP, fill=tkinter.BOTH, expand=True)
 
     label_nickJ2 = tkinter.Label(frameJ2, text="Nick:")
@@ -51,6 +52,9 @@ def segundoFrame(ventana):
     botonEntrar = tkinter.Button(frameJ2, text="Entrar", command=lambda: login(entry_nickJ2.get(), entry_passwordJ2.get(),ventana,
                                                                            frameJ2))
     botonEntrar.pack(side=tkinter.BOTTOM, pady=10)
+
+    if ultimoLogeado is not None:
+        entry_nickJ2.insert(0, ultimoLogeado)
         
 
 def registraUsuario():
@@ -135,6 +139,8 @@ def login(nick, password,ventana,frame):
             messagebox.showinfo("Login","Login exitoso")
             actualizarFrame(frame, nick, user[3], user[4], user[5])
             EncenderStart(ventana)
+            global ultimoLogeado
+            ultimoLogeado = nick
         return True
     except:
         messagebox.showerror("ERROR", "Error al conectar con la base de datos")
@@ -142,10 +148,10 @@ def login(nick, password,ventana,frame):
 
 
 
-def partidaEmpezada(ventana):
+""" def partidaEmpezada(ventana):
     obtenerUsuario(idUserLogeado)
     elJuego(idUserLogeado)
-    
+     """
 
 
 def contadorFallos(ventana):
@@ -387,7 +393,6 @@ def limpiarFrame(frame):
 
 def ventanaPrincipal():
     global ventana
-    window.destroy()
     ventana = tkinter.Tk()
     ventana.title("Login")
     ventana.resizable(False,False)
@@ -395,7 +400,7 @@ def ventanaPrincipal():
     anchoPantalla = ventana.winfo_screenwidth()
     largoPantalla = ventana.winfo_screenheight()
     ancho = 800
-    largo = 800
+    largo = 500
     x = (anchoPantalla - ancho) //2
 
 
@@ -406,7 +411,7 @@ def ventanaPrincipal():
 
     primerFrame(ventana)
         # -------------------------------------------------------------------------------------
-    segundoFrame(ventana)
+    
 
         #---------------------------------------------------------------------------------------
 
@@ -420,8 +425,8 @@ def ventanaPrincipal():
     ventana.mainloop()
 
 def elJuego(idUserLogeado):
-    ventana.destroy()
     global window
+    ventana.destroy()
     window = tkinter.Tk()
     window.title("Hundir la flota")
     rows = 6
@@ -475,8 +480,8 @@ def elJuego(idUserLogeado):
         global l_jugador
         l_jugador = tkinter.Label(window, text=f"Turno {user[1]}: 0")
         l_jugador.grid(row=10, column=5, columnspan=2)
-        botonCambiarJugador = tkinter.Button(window, text="Cambiar de jugador", width=15, command=ventanaPrincipal)
-        botonCambiarJugador.grid(row=10, column=7)
+        botonCambiarJugador = tkinter.Button(window, text="Cambiar de jugador", width=15, command=ventanaPrincipaaal)
+        botonCambiarJugador.grid(row=11, column=5, columnspan=2)
 
     
         
@@ -581,3 +586,38 @@ def elJuego(idUserLogeado):
     iniciar_barcos()
 
     window.mainloop()
+
+def ventanaPrincipaaal():
+    global ventana
+    window.destroy()
+    resetUsuariosLogeados()
+    ventana = tkinter.Tk()
+    ventana.title("Login")
+    ventana.resizable(False,False)
+
+    anchoPantalla = ventana.winfo_screenwidth()
+    largoPantalla = ventana.winfo_screenheight()
+    ancho = 800
+    largo = 500
+    x = (anchoPantalla - ancho) //2
+
+
+
+    y = (largoPantalla - largo) //2
+    ventana.geometry(f"{ancho}x{largo}+{x}+{y}")
+        #------------------------------------------------------------------------------------------
+
+    segundoFrame(ventana)
+        # -------------------------------------------------------------------------------------
+
+
+        #---------------------------------------------------------------------------------------
+
+    botonCrear = tkinter.Button(ventana,text="Crear Usuario",command=registraUsuario, width=20)
+    botonCrear.pack(side=tkinter.BOTTOM, pady=10)
+    ventana.botonStart = tkinter.Button(ventana,text="Empezar partida",state=tkinter.DISABLED,command=lambda:elJuego(idUserLogeado), width=20)
+    ventana.botonStart.pack(side=tkinter.BOTTOM)
+
+def resetUsuariosLogeados():
+    global usuariosLogeados
+    usuariosLogeados = 0    
