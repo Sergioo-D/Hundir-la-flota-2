@@ -42,4 +42,6 @@ def obtenerUsuario(id):
         return user
     except:
         messagebox.showerror("ERROR", "Error al conectar con la base de datos")
-        return None 
+        return None
+    
+     
