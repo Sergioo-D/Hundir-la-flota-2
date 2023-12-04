@@ -616,7 +616,9 @@ def elJuego(idUserLogeado):
 
     window.mainloop()
 
-
+#--------------------------------------------------------------------------------
+# Ventana que se abre cuando se pulsa el boton de cambiar de jugador, hace lo mismo que la ventana principal pero
+#logra que el juego se cierre al pulsar cambiar de jugador
 def ventanaPrincipaaal():
     global ventana
     window.destroy()
@@ -646,11 +648,13 @@ def ventanaPrincipaaal():
                                         command=lambda: elJuego(idUserLogeado), width=20)
     ventana.botonStart.pack(side=tkinter.BOTTOM)
 
-
+#--------------------------------------------------------------------------------
+# Funcion que resetea el contador de usuarios logeados
 def resetUsuariosLogeados():
     global usuariosLogeados
     usuariosLogeados = 0
-
+#--------------------------------------------------------------------------------
+# Funcion que formatea el tiempo
 def obtener_tiempo_formateado(tiempo):
     tiempo_formateado = time.strftime("%H:%M:%S", time.gmtime(tiempo))
     return tiempo_formateado
