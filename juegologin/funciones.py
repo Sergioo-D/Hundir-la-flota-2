@@ -423,10 +423,10 @@ def ventanaPrincipal():
 
 
 def elJuego(idUserLogeado):
-    iniciotiempo = time.time()  # guarda el tiempo cuando se inicia partida
+    iniciotiempo = time.time()
 
     global window
-    ventana.destroy() # cierra la ventana del login
+    ventana.destroy()
     window = tkinter.Tk()
     window.title("Hundir la flota")
     window.resizable(False, False)
@@ -442,23 +442,17 @@ def elJuego(idUserLogeado):
     rows = 6
     columns = 7
     letters = ['A', 'B', 'C', 'D', 'E', 'F']
-    tablero = [[0] * 7 for _ in range(6)]  #crea matriz e inicia cada casilla a 0
+    tablero = [[0] * 7 for _ in range(6)]
     global movimientos
-    barcos = [2, 3, 4] # lista con el tamaño de los barcos
-    # crea un diccionario para guardar las posiciones de los barcos
-    # donde size el la clave que sera [2,3,4]
+    barcos = [2, 3, 4]
     barcos_posiciones = {size: [] for size in barcos}
-    # crea un diccionario guardando 0 en cada clave size,
-    # para guardar el incremento de la variable contador
     barcos_impactados = {size: 0 for size in barcos}
-
     acierto = []
     user = obtenerUsuario(idUserLogeado)
 
     def crear_interfaz():
         global casillas_tablero
-        casillas_tablero = [] # guarda las casillas del tablero, label
-        # coloca la etiquetas en la ventana
+        casillas_tablero = []
         for i in range(rows):
             label_letras = tkinter.Label(window, text=letters[i], width=5, height=2, bg="grey")
             label_letras.grid(row=i + 1, column=0)
@@ -494,26 +488,23 @@ def elJuego(idUserLogeado):
         global l_jugador
         l_jugador = tkinter.Label(window, text=f"Turno {user[1]}: 0")
         l_jugador.grid(row=10, column=5, columnspan=2)
-        botonCambiarJugador = tkinter.Button(window, text="Cambiar de jugador", width=15, command=ventanaPrincipaaal) # vuelve al login
+        botonCambiarJugador = tkinter.Button(window, text="Cambiar de jugador", width=15, command=ventanaPrincipaaal)
         botonCambiarJugador.grid(row=11, column=5, columnspan=2)
 
     def iniciar_barcos():
-        # colocar barcos en el tablero
         for barco in barcos:
             cabe = False
-            # que siga generando posiciones random hasta que encuentre una que quepa
             while not cabe:
                 orientacion = random.choice(['horizontal', 'vertical'])
-                # si la posicion aleatoria es horizontal
                 if orientacion == 'horizontal':
                     fila = random.randint(0, 5)
-                    columna = random.randint(0, 6 - barco) # resta el tamaño del barco
+                    columna = random.randint(0, 6 - barco)
                     if all(tablero[fila][columna + i] == 0 for i in range(barco)):
                         for i in range(barco):
                             tablero[fila][columna + i] = 1
                             posicion = [fila, columna + i]
                             # descomentar para ver los barcos en el tablero
-                            #casillas_tablero[fila][columna + i].config(bg="green")
+                            casillas_tablero[fila][columna + i].config(bg="green")
                             barcos_posiciones[barco].append(posicion)
                         cabe = True
                 else:  # orientacion == 'vertical'
@@ -524,19 +515,20 @@ def elJuego(idUserLogeado):
                             tablero[fila + i][columna] = 1
                             posicion = [fila + i, columna]
                             # descomentar para ver los barcos en el tablero
-                            #casillas_tablero[fila + i][columna].config(bg="green")
+                            casillas_tablero[fila + i][columna].config(bg="green")
                             barcos_posiciones[barco].append(posicion)
                         cabe = True
 
-
+        # Mostrar el tablero en la consola (para verificar)
+        for fila in tablero:
+            print(fila)
 
 
     def dispara():
         global movimientos
-        valores = {"A": 0, "B": 1, "C": 2, "D": 3, "E": 4, "F": 5} # relaciona las posiciones con las letras
+        valores = {"A": 0, "B": 1, "C": 2, "D": 3, "E": 4, "F": 5}
         letra = l_casilla.get().capitalize()
         num = n_casilla.get()
-        # comprobaciones de los entry
         if letra != "" and num != "":
             if num.isnumeric():
                 if letra in valores:
@@ -545,11 +537,11 @@ def elJuego(idUserLogeado):
                         columna = int(num) - 1
                         if tablero[fila][columna] == 1:  # Si hay un barco en la casilla impactada
                             movimientos += 1
-                            contador_movimientos.config(text=f"Moviments: {movimientos}") #actualiza los movimientos en la ventana
+                            contador_movimientos.config(text=f"Moviments: {movimientos}")
                             l_jugador.config(text=f"Turno {user[1]}: {movimientos}")
                             if casillas_tablero[fila][columna] not in acierto:
                                 casillas_tablero[fila][columna].config(bg="red")
-                                acierto.append(casillas_tablero[fila][columna]) # guarda las casillas "tocadas"
+                                acierto.append(casillas_tablero[fila][columna])
                                 # Buscar el tamaño del barco impactado y actualizar el contador de partes impactadas
                                 for size in barcos:
                                     if [fila, columna] in barcos_posiciones[size]:
@@ -561,7 +553,6 @@ def elJuego(idUserLogeado):
                                                 casillas_tablero[pos[0]][pos[1]].config(bg="black")
                                 win()
                             else:
-                                # para que no cuente un movimiento si es una casilla ya tocada
                                 movimientos -= 1
                                 contador_movimientos.config(text=f"Moviments: {movimientos}")
                                 l_jugador.config(text=f"Turno {user[1]}: {movimientos}")
@@ -588,17 +579,14 @@ def elJuego(idUserLogeado):
 
     def win():
         contador = 0
-        # si el tamaño del barco es igual al numero de casillas impactadas suma 1.
         for size in barcos:
             if barcos_impactados[size] == size:
                 contador += 1
-        # si el contador es igual a 3 (numero de barcos que hay)
         if contador == len(barcos):
-            finalTiempo = time.time() # guarda el tiempo una vez ganada la partida
-            tiempoTranscurrido = finalTiempo - iniciotiempo # diferencia entre incio de partida y final
+            finalTiempo = time.time()
+            tiempoTranscurrido = finalTiempo - iniciotiempo
             tiempo = obtener_tiempo_formateado(tiempoTranscurrido)
             messagebox.showinfo("Resultado partida", "Has ganado en " + str(movimientos) + " movimientos! Tiempo: " + tiempo)
-            # actualizar datos en bbdd
             updatePartidasJugadas(idUserLogeado)
             updateMovimientos(idUserLogeado, movimientos)
             updateTiempo(idUserLogeado, tiempo)

@@ -7,22 +7,18 @@ window.title("Hundir la flota")
 rows = 6
 columns = 7
 letters = ['A', 'B', 'C', 'D', 'E', 'F']
-tablero = [[0] * 7 for _ in range(6)] #crea matriz e inicia cada casilla a 0
+tablero = [[0] * 7 for _ in range(6)]
 movimientos = 0
-barcos = [2, 3, 4]  # lista con el tamaño de los barcos
-# crea un diccionario para guardar las posiciones de los barcos
-# donde size el la clave que sera [2,3,4]
+barcos = [2, 3, 4]
 barcos_posiciones = {size: [] for size in barcos}
-# crea un diccionario guardando 0 en cada clave size,
-    # para guardar el incremento de la variable contador
 barcos_impactados = {size: 0 for size in barcos}
+agua = tk.PhotoImage(file="../img_olas.png", )
 acierto = []
 
 
 def crear_interfaz():
     global casillas_tablero
-    casillas_tablero = [] # guarda las casillas del tablero, label
-    # coloca la etiquetas en la ventana
+    casillas_tablero = []
     for i in range(rows):
         label_letras = tk.Label(window, text=letters[i], width=5, height=2, bg="grey")
         label_letras.grid(row=i + 1, column=0)
@@ -61,21 +57,18 @@ def crear_interfaz():
 
 
 def iniciar_barcos():
-    # colocar barcos en el tablero
     for barco in barcos:
         cabe = False
-        # que siga generando posiciones random hasta que encuentre una que quepa
         while not cabe:
             orientacion = random.choice(['horizontal', 'vertical'])
             if orientacion == 'horizontal':
                 fila = random.randint(0, 5)
-                columna = random.randint(0, 6 - barco) # resta el tamaño del barco
+                columna = random.randint(0, 6 - barco)
                 if all(tablero[fila][columna + i] == 0 for i in range(barco)):
                     for i in range(barco):
                         tablero[fila][columna + i] = 1
                         posicion = [fila, columna + i]
-                        # descomentar para ver los barcos en el tablero
-                        #casillas_tablero[fila][columna + i].config(bg="green")
+                        casillas_tablero[fila][columna + i].config(bg="red")
                         barcos_posiciones[barco].append(posicion)
                     cabe = True
             else:  # orientacion == 'vertical'
@@ -85,8 +78,7 @@ def iniciar_barcos():
                     for i in range(barco):
                         tablero[fila + i][columna] = 1
                         posicion = [fila + i, columna]
-                        # descomentar para ver los barcos en el tablero
-                        #casillas_tablero[fila + i][columna].config(bg="green")
+                        casillas_tablero[fila + i][columna].config(bg="red")
                         barcos_posiciones[barco].append(posicion)
                     cabe = True
 
@@ -111,7 +103,7 @@ def dispara():
                     l_jugador.config(text=f"Turno jugador 1: {movimientos}")
                     if tablero[fila][columna] == 1:  # Si hay un barco en la casilla impactada
                         if casillas_tablero[fila][columna] not in acierto:
-                            casillas_tablero[fila][columna].config(bg="red")
+                            casillas_tablero[fila][columna].config(bg="orange")
                             acierto.append(casillas_tablero[fila][columna])
                             # Buscar el tamaño del barco impactado y actualizar el contador de partes impactadas
                             for size in barcos:
@@ -123,15 +115,11 @@ def dispara():
                                             casillas_tablero[pos[0]][pos[1]].config(bg="black")
                             win()
                         else:
-                            # para que no cuente un movimiento si es una casilla ya tocada
                             movimientos -= 1
                             contador_movimientos.config(text=f"Moviments: {movimientos}")
                             l_jugador.config(text=f"Turno jugador 1: {movimientos}")
-                    else:  # Si esuna casilla donde no hay ningun barco
-                        if casillas_tablero[fila][columna].cget('bg') != 'blue':  # Agua
-                            movimientos += 1
-                            contador_movimientos.config(text=f"Moviments: {movimientos}")
-                            casillas_tablero[fila][columna].config(bg="blue")
+                    else:
+                        casillas_tablero[fila][columna].config(bg="blue")
                 else:
                     messagebox.showerror("Ventana de error", "El campo número es incorrecto")
             else:
@@ -151,11 +139,9 @@ def nueva_partida():
 
 def win():
     contador = 0
-    # si el tamaño del barco es igual al numero de casillas impactadas suma 1.
     for size in barcos:
         if barcos_impactados[size] == size:
             contador += 1
-    # si el contador es igual a 3 (numero de barcos que hay)
     if contador == len(barcos):
         messagebox.showinfo("Ventana info", "Has ganado en " + str(movimientos) + "movimientos!")
 
