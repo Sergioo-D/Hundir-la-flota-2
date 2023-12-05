@@ -1,0 +1,2 @@
+El programa 1 que es el login y el programa 3 que es el juego con el login crean una base de datos con el mismo nombre pero tienen diferentes columnas.
+Si pruebas primero el programa 1 recuarda de borrar la base de datos cuando vayas a probar el programa 3 si no da error.
